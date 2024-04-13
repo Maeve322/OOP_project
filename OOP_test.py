@@ -1,38 +1,26 @@
 import pytest
 from OOP_begin import Category,Product
 
+@pytest.fixture
+def sample_category():
+    return Category("Electronics", "Category for electronic products", ["Laptop", "Phone", "Tablet"])
 
 @pytest.fixture
-def category_instance():
-    category = Category("Electronics", "Category for electronic products")
-    return category
+def sample_product():
+    return Product("Laptop", "High-performance laptop", 1500.0, 10)
 
-@pytest.fixture
-def product_instance():
-    product = Product("Laptop", "High-performance laptop", 1200, 10)
-    return product
-
-
-
-def test_category_initialization(category_instance):
-    assert category_instance.name == "Electronics"
-    assert category_instance.description == "Category for electronic products"
-    assert len(category_instance.products) == 0
-
-def test_product_initialization(product_instance):
-    assert product_instance.name == "Laptop"
-    assert product_instance.description == "High-performance laptop"
-    assert product_instance.price == 1200
-    assert product_instance.quantity == 10
-
-
-def test_total_categories():
+def test_category_initialization(sample_category):
+    assert sample_category.name == "Electronics"
+    assert sample_category.description == "Category for electronic products"
+    assert sample_category.products == {"Laptop", "Phone", "Tablet"}
     assert Category.total_categories == 1
+    assert Category.total_unique_products == 3
 
-def test_total_unique_products():
-    assert Category.total_unique_products == 1
-
-
+def test_product_initialization(sample_product):
+    assert sample_product.name == "Laptop"
+    assert sample_product.description == "High-performance laptop"
+    assert sample_product.price == 1500.0
+    assert sample_product.quantity == 10
 
 # Запуск тестов
 if __name__ == "__main__":
