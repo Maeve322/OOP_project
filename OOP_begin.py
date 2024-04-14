@@ -5,9 +5,9 @@ class Category:
     def __init__(self, name: str, description: str, products: list):
         self.name = name
         self.description = description
-        self.products = set(products)
+        self.products = products
         Category.total_categories += 1
-        Category.total_unique_products += len(self.products)
+        Category.total_unique_products += len(set(self.products))
 
 class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
