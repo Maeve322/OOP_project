@@ -1,34 +1,58 @@
 import pytest
+from unittest.mock import patch
 from OOP_begin import Category,Product
 
 
 @pytest.fixture
-def sample_product():
-    return Product("Laptop", "High-performance laptop", 1500.0, 10)
+def create_category():
+    category = Category("Electronics", "Category for electronic products")
+    return category
 
 @pytest.fixture
-def sample_category(sample_product):
-    products = [
-        sample_product,
-        Product("Phone", "Smartphone", 800.0, 20),
-        Product("Tablet", "Tablet device", 600.0, 15)
-    ]
-    return Category("Electronics", "Category for electronic products", products)
+def create_product():
+    product = Product("Laptop", "High-performance laptop", 1000.0, 10)
+    return product
 
-def test_category_initialization(sample_category):
-    assert sample_category.name == "Electronics"
-    assert sample_category.description == "Category for electronic products"
-    assert len(sample_category.products) == 3
-    assert Category.total_categories == 1
-    assert Category.total_unique_products == 3
-
-def test_product_initialization(sample_product):
-    assert sample_product.name == "Laptop"
-    assert sample_product.description == "High-performance laptop"
-    assert sample_product.price == 1500.0
-    assert sample_product.quantity == 10
+def test_category_init(create_category):
+    assert create_category.name == "Electronics"
+    assert create_category.description == "Category for electronic products"
+    assert len(create_category._Category__products) == 0
 
 
+def test_product_init(create_product):
+    assert create_product.name == "Laptop"
+    assert create_product.description == "High-performance laptop"
+    assert create_product.price == 1000.0
+    assert create_product.quantity == 10
+
+def test_add_product_to_category(create_category, create_product):
+    create_category.add(create_product)
+    assert len(create_category._Category__products) == 1
+
+def test_products_info(create_category, create_product):
+    create_category.add(create_product)
+    product_info = create_category.products_info
+    assert "Laptop, 1000.0 руб. Остаток: 10 шт." in product_info
+
+def test_create_product(create_product):
+    existing_product = [Product("Laptop","High-performance laptop",1000.0,10)]
+    new_product = Product.create_product("Laptop","High-performance laptop",1500.0,10,existing_product)
+    assert new_product.price == 1500.0
+    assert new_product.quantity == 20
+
+def test_product_price_s(create_product):
+    assert create_product.price == 1000
+
+    create_product.price = 2200
+    assert create_product.price == 2200
+
+    with patch('builtins.input', return_value='n'):
+        create_product.price = 50
+        assert create_product.price == 2200
+
+    with patch('builtins.input', return_value='y'):
+        create_product.price = 40
+        assert create_product.price == 40
 
 # Запуск тестов
 if __name__ == "__main__":
