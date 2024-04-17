@@ -25,14 +25,28 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
+    @classmethod
+    def new_product(cls, **product_data):
+        return cls(**product_data)
+
     @staticmethod
     def create_product(name, description, price, quantity, existing_products):
-        for product in existing_products: # проверка на наличие существующего товара
+        for product in existing_products:
             if product.name == name:
                 if product.price < price:
                     product.price = price
                 product.quantity += quantity
                 return product
+        # Если продукт с таким именем не найден, создаем новый продукт
+        new_product_data = {
+            'name': name,
+            'description': description,
+            'price': price,
+            'quantity': quantity
+        }
+        new_product = Product.new_product(**new_product_data)
+        return new_product
+
     @property
     def price(self):
         return self.__price
