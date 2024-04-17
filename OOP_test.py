@@ -3,20 +3,23 @@ from unittest.mock import patch
 from OOP_begin import Category,Product
 
 
-@pytest.fixture
-def create_category():
-    category = Category("Electronics", "Category for electronic products")
-    return category
+
 
 @pytest.fixture
 def create_product():
     product = Product("Laptop", "High-performance laptop", 1000.0, 10)
     return product
 
+@pytest.fixture
+def create_category():
+    product = Product("Laptop","High-performance laptop", 1000.0, 10)
+    category = Category("Electronics", "Category for electronic products", [product])
+    return category
+
 def test_category_init(create_category):
     assert create_category.name == "Electronics"
     assert create_category.description == "Category for electronic products"
-    assert len(create_category._Category__products) == 0
+    assert len(create_category._Category__products) == 1
 
 
 def test_product_init(create_product):
@@ -27,12 +30,11 @@ def test_product_init(create_product):
 
 def test_add_product_to_category(create_category, create_product):
     create_category.add(create_product)
-    assert len(create_category._Category__products) == 1
+    assert len(create_category._Category__products) == 2
 
-def test_products_info(create_category, create_product):
-    create_category.add(create_product)
+def test_products_info(create_category):
     product_info = create_category.products_info
-    assert "Laptop, 1000.0 руб. Остаток: 10 шт." in product_info
+    assert "Laptop, 1000.0 руб. Остаток: 10 шт.\n" == product_info
 
 def test_create_product(create_product):
     existing_product = [Product("Laptop","High-performance laptop",1000.0,10)]
