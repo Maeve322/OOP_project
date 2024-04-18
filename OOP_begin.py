@@ -10,13 +10,15 @@ class Category:
         Category.total_unique_products += len(set(self.__products))
     def add(self,product):
         self.__products.append(product)
-    @property
-    def products_info(self):
-        info = ""
-        for product in self.__products:
-            info += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-        return info
+    def get_products(self):
+        return self.__products
+
+    def __len__(self):
+        return sum(product.quantity for product in self.__products)
+
     
+    def __str__(self):
+        return f"{self.name}, количество продуктов: {len(self)} шт."
 
 class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
@@ -62,5 +64,34 @@ class Product:
         else:
             self.__price = new_price
 
+ # Название продукта, 80 руб. Остаток: 15 шт.
+    
+    def __str__(self):
+        return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт.\n"
 
 
+    def __add__(self, other):
+        return (self.price*self.quantity) + (other.price * other.quantity)
+
+
+
+
+    
+class InspectionsCategory:
+    def __init__(self, category):
+        self.category = category
+        self.products = self.category.get_products()
+        self.index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index < len(self.products):
+            product = self.products[self.index]
+            self.index += 1
+            return product
+        else:
+            raise StopIteration
+        
+        

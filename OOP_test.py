@@ -32,10 +32,19 @@ def test_add_product_to_category(create_category, create_product):
     create_category.add(create_product)
     assert len(create_category._Category__products) == 2
 
+def test_products_count(create_category):
+    assert len(create_category) == 10
+    
+def test_category_get_products(create_category):
+    products = create_category.get_products()
+    assert products[0].name == "Laptop"
 def test_products_info(create_category):
-    product_info = create_category.products_info
-    assert "Laptop, 1000.0 руб. Остаток: 10 шт.\n" == product_info
+    product_info = str(create_category)
+    assert "Electronics, количество продуктов: 10 шт." == product_info
 
+def test_category_length(create_category,create_product):
+    create_category.add(create_product)
+    assert len(create_category) == 20
 def test_create_product(create_product):
     existing_product = [Product("Laptop","High-performance laptop",1000.0,10)]
     new_product = Product.create_product("Laptop","High-performance laptop",1500.0,10,existing_product)
@@ -56,6 +65,20 @@ def test_product_price_s(create_product):
         create_product.price = 40
         assert create_product.price == 40
 
+
+def test_product_info(create_product):
+    assert "Laptop, 1000.0 руб. Остаток: 10 шт.\n" == str(create_product)
+
+def test_product_add(create_product):
+    summary = create_product + Product("Laptop","High-performance laptop",1000.0,10)
+    assert summary == 20000.0
+
+
+# Проверка работоспособности интерфейса InspectionsCategory
+def test_inspections_category_init(create_category):
+    assert create_category.name == "Electronics"
+    assert create_category.description == "Category for electronic products"
+    assert len(create_category._Category__products) == 1
 # Запуск тестов
 if __name__ == "__main__":
     pytest.main()
