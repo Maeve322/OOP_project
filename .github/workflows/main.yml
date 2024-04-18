@@ -27,6 +27,4 @@ jobs:
 
       - name: Update README with coverage badge
         run: |
-          pip install coverage-badge
-          coverage-badge -f -o coverage.svg
-          sed -i 's|!\[Coverage\](coverage.svg)|![Coverage](./coverage.svg)|g' README.md
+          cat coverage.txt >> README.md
