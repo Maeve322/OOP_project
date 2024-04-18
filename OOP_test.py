@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from OOP_begin import Category,Product
+from OOP_begin import Category,Product,InspectionsCategory
 
 
 
@@ -76,9 +76,15 @@ def test_product_add(create_product):
 
 # Проверка работоспособности интерфейса InspectionsCategory
 def test_inspections_category_init(create_category):
-    assert create_category.name == "Electronics"
-    assert create_category.description == "Category for electronic products"
-    assert len(create_category._Category__products) == 1
+    product1 = Product("Laptop", "High-performance laptop", 1000.0, 10)
+    product2 = Product("Smartphone", "Flagship smartphone", 800.0, 15)
+    category = Category("Electronics", "Category for electronic products", [product1, product2])
+    inspection = InspectionsCategory(category)
+    products = list(inspection)
+    assert len(products) == 2
+    assert products[0] == product1
+    assert products[1] == product2
+    
 # Запуск тестов
 if __name__ == "__main__":
     pytest.main()
