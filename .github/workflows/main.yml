@@ -1,12 +1,11 @@
-name: Run Tests
-
+name: Run test
 on:
   push:
     branches:
       - main
 
 jobs:
-  test:
+  update-readme:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,9 +18,15 @@ jobs:
           python-version: 3.8
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: install pytest
-        run: pip install pytest
+        run: pip install coverage pytest
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests and generate coverage report
+        run: |
+          coverage run -m pytest
+          coverage report -m > coverage.txt
+
+      - name: Update README with coverage badge
+        run: |
+          pip install coverage-badge
+          coverage-badge -f -o coverage.svg
+          sed -i 's|!\[Coverage\](coverage.svg)|![Coverage](./coverage.svg)|g' README.md
