@@ -77,7 +77,7 @@ class Product:
 
 
     
-class InspectionsCategory:
+class inspectionsCategory:
     def __init__(self, category):
         self.category = category
         self.products = self.category.get_products()
