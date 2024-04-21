@@ -9,7 +9,11 @@ class Category:
         Category.total_categories += 1
         Category.total_unique_products += len(set(self.__products))
     def add(self,product):
-        self.__products.append(product)
+        if isinstance(product,Product):
+            self.__products.append(product)
+        else:
+            raise TypeError("Можно добавлять только продукты или их наследников")
+        
     def get_products(self):
         return self.__products
 
@@ -20,6 +24,10 @@ class Category:
     def __str__(self):
         return f"{self.name}, количество продуктов: {len(self)} шт."
 
+
+
+
+    
 class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
@@ -71,10 +79,29 @@ class Product:
 
 
     def __add__(self, other):
-        return (self.price*self.quantity) + (other.price * other.quantity)
+        if type(self) != type(other):
+            raise TypeError("Нельзя складывать товары разных классов")
+        return (self.price * self.quantity) + (other.price * other.quantity)
 
 
 
+
+class Smartphone(Product):
+    def __init__(self, name: str, description: str, price: float, quantity: int,company: str,model:str,ram:float,color:str):
+        super().__init__(name, description, price, quantity)
+        self.company = company
+        self.model = model
+        self.ram = ram
+        self.color = color
+
+class Grass(Product):
+    def __init__(self, name: str, description: str, price: float, quantity: int,country: str,date_grown:int,color:str):
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.date_grown = date_grown
+        self.color = color
+        
+        
 
     
 class inspectionsCategory:

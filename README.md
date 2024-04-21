@@ -18,8 +18,8 @@ coverage run -m pytest -cov-report=html OOP_test.py
 ```
 Name           Stmts   Miss  Cover   Missing
 --------------------------------------------
-OOP_begin.py      66      5    92%   32, 43-50, 59
-OOP_test.py       66      1    98%   90
+shop.py           83      5    94%   40, 51-58, 67
+test_shop.py     100      1    99%   130
 --------------------------------------------
-TOTAL            132      6    95%
+TOTAL            183      6    97%
 ```
