@@ -1,6 +1,9 @@
 import pytest
 from unittest.mock import patch
-from shop import Category,Product,inspectionsCategory,Smartphone,Grass
+from shop import Category,\
+    Product,inspectionsCategory,\
+        Smartphone,Grass,DebugMixin
+        
 
 
 
@@ -25,7 +28,6 @@ def test_category_init(create_category):
     assert create_category.description == "Category for electronic products"
     assert len(create_category._Category__products) == 1
 
-
 def test_smartphone_init(create_smartphone_product):
     assert create_smartphone_product.name == "Laptop"
     assert create_smartphone_product.description == "High-performance laptop"
@@ -46,8 +48,7 @@ def test_grass_init(create_grass_product):
     assert create_grass_product.date_grown == 2019
     assert create_grass_product.color == "White"
     assert isinstance(create_grass_product,Product) == True
-                      
-                      
+                                  
 def test_add_product_to_category(create_category, create_smartphone_product):
     create_category.add(create_smartphone_product)
     assert len(create_category._Category__products) == 2
@@ -75,7 +76,6 @@ def test_create_product(create_smartphone_product):
     new_product = Smartphone.create_product("Laptop", "High-performance laptop", 1500.0, 10,existing_product)
     assert new_product.price == 1500.0
     assert new_product.quantity == 20
-
 def test_product_price_s(create_grass_product):
     assert create_grass_product.price == 1000
 
@@ -89,8 +89,6 @@ def test_product_price_s(create_grass_product):
     with patch('builtins.input', return_value='y'):
         create_grass_product.price = 40
         assert create_grass_product.price == 40
-
-
 def test_product_info(create_smartphone_product):
     assert "Laptop, 1000.0 руб. Остаток: 10 шт.\n" == str(create_smartphone_product)
 
@@ -102,17 +100,19 @@ def test_product_add_invalid_product(create_smartphone_product,create_grass_prod
         create_smartphone_product + create_grass_product
 
 
-# # Проверка работоспособности интерфейса InspectionsCategory
-# def test_inspections_category_init(create_category):
-#     product1 = Product("Laptop", "High-performance laptop", 1000.0, 10)
-#     product2 = Product("Smartphone", "Flagship smartphone", 800.0, 15)
-#     category = Category("Electronics", "Category for electronic products", [product1, product2])
-#     inspection = inspectionsCategory(category)
-#     products = list(inspection)
-#     assert len(products) == 2
-#     assert products[0] == product1
-#     assert products[1] == product2
+# Проверка работоспособности интерфейса InspectionsCategory
+def test_inspections_category_init(create_category,create_grass_product,create_smartphone_product):
+    category = Category("Electronics", "Category for electronic products", [create_grass_product, create_smartphone_product])
+    inspection = inspectionsCategory(category)
+    products = list(inspection)
+    assert len(products) == 2
+    assert products[0] == create_grass_product
+    assert products[1] == create_smartphone_product
     
+    
+def test_debug_mixin_repr(create_smartphone_product):
+    expected_output = "Smartphone (name=Laptop, description=High-performance laptop, _Product__price=1000.0, quantity=10, company=Apple, model=Air 15, ram=4, color=White)"
+    assert repr(create_smartphone_product) == expected_output
 # Запуск тестов
 if __name__ == "__main__":
     pytest.main()

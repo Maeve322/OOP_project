@@ -139,8 +139,3 @@ class inspectionsCategory:
         
       
 
-
-phone = Smartphone("Laptop", "High-performance laptop", 1000.0, 10, "Apple", "Air 15", 4, "White")
-grass = Grass("Laptop", "High-performance laptop", 1000.0, 10, "Russia", 2019, "White")
-print(repr(phone))
-print(repr(grass))
