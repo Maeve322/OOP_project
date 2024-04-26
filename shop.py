@@ -1,3 +1,13 @@
+from abc import ABC, abstractmethod
+
+class DebugMixin:
+    def __repr__(self):
+        class_name = self.__class__.__name__
+        attributes = ", ".join([f"{attr}={getattr(self, attr)}" for attr in self.__dict__])
+        return f"{class_name} ({attributes})"
+
+
+
 class Category:
     total_categories = 0
     total_unique_products = 0
@@ -28,7 +38,7 @@ class Category:
 
 
     
-class Product:
+class Product(ABC):
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
@@ -72,7 +82,10 @@ class Product:
         else:
             self.__price = new_price
 
- # Название продукта, 80 руб. Остаток: 15 шт.
+ 
+    @abstractmethod
+    def print_properties(self):
+        ...
     
     def __str__(self):
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт.\n"
@@ -86,21 +99,24 @@ class Product:
 
 
 
-class Smartphone(Product):
+class Smartphone(Product,DebugMixin):
     def __init__(self, name: str, description: str, price: float, quantity: int,company: str,model:str,ram:float,color:str):
         super().__init__(name, description, price, quantity)
         self.company = company
         self.model = model
         self.ram = ram
         self.color = color
-
-class Grass(Product):
+    
+    def print_properties(self):
+        print(f"Компания: {self.company}\nМодель: {self.color}\nОперативная память: {self.ram}\n")
+class Grass(Product,DebugMixin):
     def __init__(self, name: str, description: str, price: float, quantity: int,country: str,date_grown:int,color:str):
         super().__init__(name, description, price, quantity)
         self.country = country
         self.date_grown = date_grown
         self.color = color
-        
+    def print_properties(self):
+        print(f"Страна: {self.country}\nДата роста: {self.date_grown}\n цвет: {self.color}\n")
         
 
     
@@ -121,4 +137,10 @@ class inspectionsCategory:
         else:
             raise StopIteration
         
-        
+      
+
+
+phone = Smartphone("Laptop", "High-performance laptop", 1000.0, 10, "Apple", "Air 15", 4, "White")
+grass = Grass("Laptop", "High-performance laptop", 1000.0, 10, "Russia", 2019, "White")
+print(repr(phone))
+print(repr(grass))
