@@ -36,9 +36,13 @@ class Category:
 
 
 
+class BaseProduct(ABC):
+    @abstractmethod
+    def print_properties(self):
+        ...
 
     
-class Product(ABC):
+class Product(BaseProduct):
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
