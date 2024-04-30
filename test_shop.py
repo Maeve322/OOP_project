@@ -5,7 +5,7 @@ from shop import Category,\
         Smartphone,Grass,DebugMixin
         
 
-
+from ShopExceptions import QuantityError
 
 
 @pytest.fixture
@@ -23,6 +23,10 @@ def create_category(create_smartphone_product):
     category = Category("Electronics", "Category for electronic products", [create_smartphone_product])
     return category
 
+@pytest.fixture
+def create_empty_category():
+    category = Category("Electronics", "Category for electronic products", [])
+    return category
 def test_category_init(create_category):
     assert create_category.name == "Electronics"
     assert create_category.description == "Category for electronic products"
@@ -67,7 +71,8 @@ def test_category_get_products(create_category):
 def test_products_info(create_category):
     product_info = str(create_category)
     assert "Electronics, количество продуктов: 10 шт." == product_info
-
+def test_category_avg_price(create_empty_category):
+    assert create_empty_category.avg_price() == 0
 def test_category_length(create_category,create_smartphone_product):
     create_category.add(create_smartphone_product)
     assert len(create_category) == 20
@@ -91,14 +96,12 @@ def test_product_price_s(create_grass_product):
         assert create_grass_product.price == 40
 def test_product_info(create_smartphone_product):
     assert "Laptop, 1000.0 руб. Остаток: 10 шт.\n" == str(create_smartphone_product)
-
 def test_product_add(create_smartphone_product):
     summary = create_smartphone_product + Smartphone("Laptop", "High-performance laptop", 1000.0, 10, "Apple", "Air 15", 4, "White")
     assert summary == 20000.0
 def test_product_add_invalid_product(create_smartphone_product,create_grass_product):
     with pytest.raises(TypeError):
         create_smartphone_product + create_grass_product
-
 
 # Проверка работоспособности интерфейса InspectionsCategory
 def test_inspections_category_init(create_category,create_grass_product,create_smartphone_product):
@@ -108,11 +111,17 @@ def test_inspections_category_init(create_category,create_grass_product,create_s
     assert len(products) == 2
     assert products[0] == create_grass_product
     assert products[1] == create_smartphone_product
-    
-    
+      
 def test_debug_mixin_repr(create_smartphone_product):
     expected_output = "Smartphone (name=Laptop, description=High-performance laptop, _Product__price=1000.0, quantity=10, company=Apple, model=Air 15, ram=4, color=White)"
     assert repr(create_smartphone_product) == expected_output
+
+#Test adding a product with zero quantity at category
+def test_zero_quantity_product(create_category):
+    product = Smartphone("Iphone", "High-performance phone", 1000.0, 0, "Apple", "14", 4, "White")
+    with pytest.raises(QuantityError):
+        create_category.add(product)
+
 # Запуск тестов
 if __name__ == "__main__":
     pytest.main()

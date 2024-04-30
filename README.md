@@ -10,16 +10,18 @@ pip install -r requirements.txt
 <p>*unix</p>
 
 ```bash
-coverage run -m pytest -cov-report=html OOP_test.py
-
+$ coverage run -m pytest -cov-report=html test_shop.py
+$ coverage html
 ```
 
 ### 3 Test coverage
 ```
-Name           Stmts   Miss  Cover 
-----------------------------------
-shop.py           96      8    92%
-test_shop.py      91      1    99%
-----------------------------------
-TOTAL            187      9    95%
+Name                Stmts   Miss  Cover
+---------------------------------------
+Mixins.py               5      0   100%
+ShopExceptions.py       5      1    80%
+shop.py               112      9    92%
+test_shop.py          102      1    99%
+---------------------------------------
+TOTAL                 224     11    95%
 ```

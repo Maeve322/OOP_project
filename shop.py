@@ -1,12 +1,6 @@
 from abc import ABC, abstractmethod
-
-class DebugMixin:
-    def __repr__(self):
-        class_name = self.__class__.__name__
-        attributes = ", ".join([f"{attr}={getattr(self, attr)}" for attr in self.__dict__])
-        return f"{class_name} ({attributes})"
-
-
+from Mixins import DebugMixin
+from ShopExceptions import QuantityError
 
 class Category:
     total_categories = 0
@@ -19,11 +13,30 @@ class Category:
         Category.total_categories += 1
         Category.total_unique_products += len(set(self.__products))
     def add(self,product):
-        if isinstance(product,Product):
-            self.__products.append(product)
-        else:
-            raise TypeError("Можно добавлять только продукты или их наследников")
-        
+        try:
+            if isinstance(product,Product):
+                if product.quantity <= 0:
+                    raise QuantityError
+                else:
+                    self.__products.append(product)
+                    print(f"Продукт {product.name} добавлен в категорию {self.name}")         
+                print("Обработка добавления продукта завершена")       
+            else:
+                raise TypeError
+        except QuantityError:
+            raise QuantityError("Количество товара должно быть больше нуля")
+        except TypeError:
+            raise TypeError("Можно добавлять только продукты")
+        finally:
+            print("Обработка добавления продукта завершена")
+           
+            
+            
+    def avg_price(self):
+        try:
+            return sum(product.price for product in self.__products) / len(self.__products)
+        except ZeroDivisionError:
+            return 0
     def get_products(self):
         return self.__products
 
@@ -99,9 +112,6 @@ class Product(BaseProduct):
         if type(self) != type(other):
             raise TypeError("Нельзя складывать товары разных классов")
         return (self.price * self.quantity) + (other.price * other.quantity)
-
-
-
 
 class Smartphone(Product,DebugMixin):
     def __init__(self, name: str, description: str, price: float, quantity: int,company: str,model:str,ram:float,color:str):
